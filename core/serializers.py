@@ -2,51 +2,21 @@ from rest_framework import serializers
 from .models import QuadroCargos, Cargo, Orgao, Municipio
 
 class QuadroCargosSerializer(serializers.ModelSerializer):
-    nome_cidade = serializers.CharField(required=False, allow_blank=True)
-    codigo_ibge = serializers.IntegerField(required=False, allow_null=True)
-    orgao_id = serializers.IntegerField(required=True)
-
+    nome_quadro = serializers.CharField(required=False)
+    codigo_controle = serializers.CharField(required=False)
+    
     class Meta:
         model = QuadroCargos
-        fields = [
-            'codigo_controle',
-            'nome_quadro',
-            'data_inclusao',
-            'data_atualizacao',
-            'status',
-            'revogado',
-            'nome_cidade',
-            'codigo_ibge',
-            'orgao_id',
-        ]
+        fields = "__all__"
 
     def validate(self, attrs):
-        nome_cidade = attrs.get('nome_cidade')
-        codigo_ibge = attrs.get('codigo_ibge')
-        orgao_id = attrs.get('orgao_id')
-
-        if not orgao_id:
-            raise serializers.ValidationError({"orgao_id": "O parâmetro 'orgao_id' é obrigatório."})
-
-        if not nome_cidade and not codigo_ibge:
-            raise serializers.ValidationError(
-                {"non_field_errors": "Os parâmetros 'nome_cidade' ou 'codigo_ibge' devem ser informados."}
-            )
-
+        # Garantir que pelo menos um campo esteja preenchido
+        if not attrs.get("codigo_controle") and not attrs.get("nome_quadro"):
+            raise serializers.ValidationError({
+                "detail": "Pelo menos um dos campos 'codigo_controle' ou 'nome_quadro' deve ser informado."
+            })
         return attrs
-
-    def get_filtered_data(self):
-        nome_cidade = self.validated_data.get('nome_cidade')
-        codigo_ibge = self.validated_data.get('codigo_ibge')
-        orgao_id = self.validated_data.get('orgao_id')
-
-        filtros = {'orgao_id': orgao_id}
-        if nome_cidade:
-            filtros['nome_cidade__iexact'] = nome_cidade
-        if codigo_ibge:
-            filtros['codigo_ibge'] = codigo_ibge
-
-        return QuadroCargos.objects.filter(**filtros)
+    
 
 class CargoSerializer(serializers.ModelSerializer):
     nome_cidade = serializers.CharField(required=False, allow_blank=True)

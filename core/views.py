@@ -1,30 +1,109 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
 from .models import QuadroCargos, Cargo, Orgao, Municipio
 from .serializers import QuadroCargosSerializer, CargoSerializer, OrgaoSerializer
-from rest_framework.permissions import IsAuthenticated, AllowAny
 
 class QuadroCargosView(APIView):
-    permission_classes = [AllowAny]
-
+    '''
+    O swagger auto schema serve para vc explicar cada metodo do seu endpoint, dizer o que é obrigatorio, se é str ou int...
+    fazer tudo por ele basicamente, por ser uma API publica, ela deve ta clara para o usuario final...
+    manual_parameters: Vai ser onde o usuario vai setar os parametros
+    responses: Vai ser os exemplos de resposta
+    '''
+    @swagger_auto_schema(
+        operation_summary="Consulta de Quadros de Cargos",
+        operation_description=(
+            "Este endpoint permite consultar os quadros de cargos com base no nome do quadro "
+            "ou no código de controle. Pelo menos um dos parâmetros 'codigo_controle' ou "
+            "'nome_quadro' deve ser informado."
+        ),
+        manual_parameters=[
+            openapi.Parameter(
+                "codigo_controle",
+                openapi.IN_QUERY,
+                description="Código de controle a ser consultado.",
+                type=openapi.TYPE_STRING,
+                required=False,
+            ),
+            openapi.Parameter(
+                "nome_quadro",
+                openapi.IN_QUERY,
+                description="Nome do quadro a ser consultado.",
+                type=openapi.TYPE_STRING,
+                required=False,
+            ),
+        ],
+        responses={
+            200: openapi.Response(
+                description="Consulta realizada com sucesso",
+                examples={
+                    "application/json": [
+                        {
+                            "codigo_controle": 101,
+                            "nome_quadro": "Quadro Geral de Servidores",
+                            "data_inclusao": "2010-01-01",
+                            "data_atualizacao": "2023-06-15",
+                            "status": "Ativo",
+                            "revogado": False,
+                        },
+                        {
+                            "codigo_controle": 102,
+                            "nome_quadro": "Quadro de Professores",
+                            "data_inclusao": "2015-02-10",
+                            "data_atualizacao": "2024-01-01",
+                            "status": "Ativo",
+                            "revogado": False,
+                        },
+                    ]
+                },
+            ),
+            400: openapi.Response(
+                description="Parâmetros obrigatórios ausentes",
+                examples={
+                    "application/json": {
+                        "error": "Os parâmetros 'codigo_controle ou nome_quadro' são obrigatórios."
+                    }
+                },
+            ),
+            404: openapi.Response(
+                description="Nenhum quadro de cargos encontrado",
+                examples={
+                    "application/json": {
+                        "error": "Nenhum quadro de cargos encontrado para os critérios informados."
+                    }
+                },
+            ),
+        },
+    )
     def get(self, request):
         serializer = QuadroCargosSerializer(data=request.query_params)
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+        query_params = request.query_params
+        codigo_controle = query_params.get("codigo_controle")
+        nome_quadro = query_params.get("nome_quadro")
 
-        quadros = serializer.get_filtered_data()
+        # Realizar busca no banco de dados
+        if codigo_controle:
+            quadros = QuadroCargos.objects.filter(codigo_controle=codigo_controle, status=True, revogado=False)
+        else:
+            quadros = QuadroCargos.objects.filter(nome_quadro__icontains=nome_quadro, status=True, revogado=False)
+
         if not quadros.exists():
             return Response(
                 {"error": "Nenhum quadro de cargos encontrado para os critérios informados."},
-                status=status.HTTP_404_NOT_FOUND
+                status=status.HTTP_404_NOT_FOUND,
             )
-
+       
+        # Serializar os dados encontrados
         serializer = QuadroCargosSerializer(quadros, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 class CargoView(APIView):
-    permission_classes = [AllowAny]
 
     def get(self, request):
         serializer = CargoSerializer(data=request.query_params)
@@ -53,7 +132,6 @@ class CargoView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 class OrgaosView(APIView):
-    permission_classes = [AllowAny]
     
     def get(self, request):
         nome_municipio = request.query_params.get('nome_municipio')

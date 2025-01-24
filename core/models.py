@@ -1,44 +1,25 @@
 from django.db import models
 
 class QuadroCargos(models.Model):
-    STATUS_CHOICES = [
-        ('ativo', 'Ativo'),
-        ('inativo', 'Inativo'),
-        ('pendente', 'Pendente'),
-    ]
-
     codigo_controle = models.AutoField(primary_key=True)
     nome_quadro = models.CharField(max_length=255, verbose_name="Nome do Quadro")
     data_inclusao = models.DateField(verbose_name="Data de Inclusão", auto_now_add=True)
     data_atualizacao = models.DateField(verbose_name="Data de Atualização", auto_now=True)
-    status = models.CharField(max_length=50, choices=STATUS_CHOICES, default='ativo', verbose_name="Status")
+    status = models.BooleanField(default=True, verbose_name="Status")
     revogado = models.BooleanField(default=False, verbose_name="Revogado")
 
-    def __str__(self):
-        return f"{self.nome_quadro} - {self.status}"
-
-    class Meta:
-        verbose_name = "Quadro de Cargo"
-        verbose_name_plural = "Quadros de Cargos"
-        ordering = ['data_inclusao']
 
 class Escolaridade(models.Model):
     nome = models.CharField(max_length=255)
 
-    def __str__(self):
-        return self.nome
 
 class OrdemProfissional(models.Model):
     nome = models.CharField(max_length=255)
 
-    def __str__(self):
-        return self.nome
 
 class AtoLegal(models.Model):
     identificacao = models.CharField(max_length=255)
 
-    def __str__(self):
-        return self.identificacao
 
 class TipoProvimento(models.Model):
     descricao = models.CharField(max_length=255)
