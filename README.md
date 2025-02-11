@@ -1,4 +1,5 @@
-# Minha API Pública
+
+# **Minha API Pública**
 
 Bem-vindo à API pública que oferece dados relacionados à gestão de cargos, órgãos e municípios. Este projeto foi desenvolvido com o objetivo de facilitar o acesso às informações e promover transparência na administração pública.
 
@@ -10,14 +11,14 @@ Bem-vindo à API pública que oferece dados relacionados à gestão de cargos, �
 - [Como Contribuir](#como-contribuir)
 - [Licença](#licença)
 
-## Tecnologias Utilizadas
+## **Tecnologias Utilizadas**
 - **Python** (versão 3.9+)
 - **Django** (4.0+)
 - **Django REST Framework** (DRF)
 - **drf-yasg** para documentação Swagger
 - Banco de Dados Relacional (como PostgreSQL ou SQLite)
 
-## Instalação e Configuração
+## **Instalação e Configuração**
 1. Clone este repositório:
    ```bash
    git clone https://github.com/luizsoc/Projeto-TCMPA
@@ -50,7 +51,7 @@ Bem-vindo à API pública que oferece dados relacionados à gestão de cargos, �
    - Home: [http://127.0.0.1:8000/](http://127.0.0.1:8000/)
    - Swagger: [http://127.0.0.1:8000/swagger/](http://127.0.0.1:8000/swagger/)
 
-## Endpoints Disponíveis
+## **Endpoints Disponíveis**
 
 ### 1. **Quadros de Cargos**
 - **Rota**: `/api/public/quadros`
@@ -109,7 +110,8 @@ Bem-vindo à API pública que oferece dados relacionados à gestão de cargos, �
 
 ---
 
-## Modelos Principais
+## **Modelos Principais**
+
 ### QuadroCargos
 Armazena informações sobre quadros de cargos.
 - **Campos**:
@@ -133,7 +135,7 @@ Armazena informações sobre municípios.
 Armazena informações sobre órgãos relacionados a municípios.
 - **Campos**: `nome_exibicao`, `lei_criacao`, `cnpj`, `tipo_orgao`
 
-## Como Contribuir
+## **Como Contribuir**
 1. Crie um fork deste repositório.
 2. Crie uma branch para suas alterações:
    ```bash
@@ -149,6 +151,5 @@ Armazena informações sobre órgãos relacionados a municípios.
    ```
 5. Abra um Pull Request neste repositório.
 
-## Licença
+## **Licença**
 Este projeto está licenciado sob a [MIT License](LICENSE).
-
