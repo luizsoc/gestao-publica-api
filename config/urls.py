@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.urls import path, re_path
 from django.http import HttpResponse
-from django.views.generic import RedirectView #Criamos essa importação para fazer o redirecionamento para o swagger automaticamente
+from django.views.generic import RedirectView 
 from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
