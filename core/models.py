@@ -30,7 +30,7 @@ class TipoProvimento(models.Model):
 class Cargo(models.Model):
     nome_do_cargo_vigente = models.CharField(max_length=255)
     data_inicio_vigencia = models.DateField()
-    data_fim_vigencia = models.DateField()
+    data_fim_vigencia = models.DateField(null=True, blank=True)  # Torna opcional
     vagas_autorizadas = models.IntegerField()
     vagas_ocupadas = models.IntegerField()
     cargo_acumulavel = models.BooleanField(default=False)
@@ -40,6 +40,11 @@ class Cargo(models.Model):
     ordem_profissional = models.ForeignKey(OrdemProfissional, on_delete=models.CASCADE, null=True, blank=True)
     lei_criacao = models.ForeignKey(AtoLegal, on_delete=models.CASCADE)
     tipo_provimento = models.ForeignKey(TipoProvimento, on_delete=models.CASCADE)
+    quadro_cargos = models.ForeignKey(
+        QuadroCargos, 
+        on_delete=models.CASCADE,
+        related_name="cargos"
+    )
 
     def __str__(self):
         return self.nome_do_cargo_vigente

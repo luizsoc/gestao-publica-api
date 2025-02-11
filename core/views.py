@@ -7,12 +7,7 @@ from .models import QuadroCargos, Cargo, Orgao, Municipio
 from .serializers import QuadroCargosSerializer, CargoSerializer, OrgaoSerializer
 
 class QuadroCargosView(APIView):
-    '''
-    O swagger auto schema serve para vc explicar cada metodo do seu endpoint, dizer o que é obrigatorio, se é str ou int...
-    fazer tudo por ele basicamente, por ser uma API publica, ela deve ta clara para o usuario final...
-    manual_parameters: Vai ser onde o usuario vai setar os parametros
-    responses: Vai ser os exemplos de resposta
-    '''
+
     @swagger_auto_schema(
         operation_summary="Consulta de Quadros de Cargos",
         operation_description=(
@@ -90,8 +85,13 @@ class QuadroCargosView(APIView):
         # Realizar busca no banco de dados
         if codigo_controle:
             quadros = QuadroCargos.objects.filter(codigo_controle=codigo_controle, status=True, revogado=False)
-        else:
+        elif nome_quadro:
             quadros = QuadroCargos.objects.filter(nome_quadro__icontains=nome_quadro, status=True, revogado=False)
+        else: 
+            return Response(
+                {"error": "Os parâmetros 'codigo_controle' ou 'nome_quadro' são obrigatórios."},
+                status=status.HTTP_400_BAD_REQUEST
+            ) 
 
         if not quadros.exists():
             return Response(
@@ -115,7 +115,7 @@ class CargoView(APIView):
         codigo_orgao = serializer.validated_data.get('codigo_orgao')
         codigo_controle_quadro_cargos = serializer.validated_data.get('codigo_controle_quadro_cargos')
 
-        filtros = {'codigo_orgao': codigo_orgao, 'id': codigo_controle_quadro_cargos}
+        filtros = {'codigo_orgao': codigo_orgao, 'quadro_cargos_id': codigo_controle_quadro_cargos}
         if nome_cidade:
             filtros['nome_cidade__iexact'] = nome_cidade
         if codigo_ibge:
@@ -132,7 +132,7 @@ class CargoView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 class OrgaosView(APIView):
-    
+
     def get(self, request):
         nome_municipio = request.query_params.get('nome_municipio')
         codigo_ibge = request.query_params.get('codigo_ibge')
@@ -143,12 +143,13 @@ class OrgaosView(APIView):
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-        try:
-            if nome_municipio:
-                municipio = Municipio.objects.get(nome__iexact=nome_municipio)
-            elif codigo_ibge:
-                municipio = Municipio.objects.get(codigo_ibge=codigo_ibge)
-        except Municipio.DoesNotExist:
+        municipio = None
+        if nome_municipio:
+            municipio = Municipio.objects.filter(nome__iexact=nome_municipio).first()
+        if not municipio and codigo_ibge:
+            municipio = Municipio.objects.filter(codigo_ibge=codigo_ibge).first()
+
+        if not municipio:
             return Response(
                 {"error": "Nenhum dado encontrado para o município informado."},
                 status=status.HTTP_404_NOT_FOUND
@@ -157,10 +158,10 @@ class OrgaosView(APIView):
         orgaos = Orgao.objects.filter(municipio=municipio)
         if not orgaos.exists():
             return Response(
-                {"error": "Nenhum dado encontrado para o município informado."},
+                {"error": "Nenhum órgão encontrado para o município informado."},
                 status=status.HTTP_404_NOT_FOUND
             )
 
         serializer = OrgaoSerializer(orgaos, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
-
+    

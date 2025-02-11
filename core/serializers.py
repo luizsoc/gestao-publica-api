@@ -13,7 +13,7 @@ class QuadroCargosSerializer(serializers.ModelSerializer):
         # Garantir que pelo menos um campo esteja preenchido
         if not attrs.get("codigo_controle") and not attrs.get("nome_quadro"):
             raise serializers.ValidationError({
-                "detail": "Pelo menos um dos campos 'codigo_controle' ou 'nome_quadro' deve ser informado."
+                "error": "Pelo menos um dos campos 'codigo_controle' ou 'nome_quadro' deve ser informado."
             })
         return attrs
     
