@@ -64,13 +64,13 @@ class CargoView(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
         filtros = {
-            "codigo_orgao": serializer.validated_data.get("codigo_orgao"),
-            "quadro_cargos_id": serializer.validated_data.get("codigo_controle_quadro_cargos"),
+            "codigo_orgao": serializer.validated_data("codigo_orgao"),
+            "quadro_cargos_id": serializer.validated_data("codigo_controle_quadro_cargos"),
         }
         if serializer.validated_data.get("nome_cidade"):
-            filtros["nome_cidade__iexact"] = serializer.validated_data.get("nome_cidade")
+            filtros["nome_cidade__iexact"] = serializer.validated_data("nome_cidade")
         if serializer.validated_data.get("codigo_ibge"):
-            filtros["codigo_ibge"] = serializer.validated_data.get("codigo_ibge")
+            filtros["codigo_ibge"] = serializer.validated_data("codigo_ibge")
 
         cargos = Cargo.objects.filter(**filtros)
         if not cargos.exists():
