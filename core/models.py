@@ -6,10 +6,10 @@ class QuadroCargos(models.Model):
     
 class Cargo(models.Model):
     nome_do_cargo = models.CharField(max_length=255)
-    vagas_autorizadas = models.IntegerField()
-    vagas_ocupadas = models.IntegerField()
+    vagas_autorizadas = models.IntegerField(default=0)
+    vagas_ocupadas = models.IntegerField(default=0)
     cbo = models.CharField(max_length=10)
-    quadro_cargos = models.IntegerField(default=0)  # Apenas armazenando o ID, sem FK
+    quadro_cargos = models.IntegerField(default=1)  # Apenas armazenando o ID, sem FK
 
 class Orgao(models.Model):
     nome_exibicao = models.CharField(max_length=255)
