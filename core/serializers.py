@@ -1,9 +1,9 @@
 from rest_framework import serializers
-from .models import Cargo, Orgao
+from .models import Cargos, Orgao
 
 class CargoSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Cargo
+        model = Cargos
         fields = '__all__'
 
 class OrgaoSerializer(serializers.ModelSerializer):

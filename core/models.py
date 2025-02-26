@@ -4,7 +4,7 @@ class QuadroCargos(models.Model):
     codigo_controle = models.AutoField(primary_key=True)
     nome_quadro = models.CharField(max_length=255)
     
-class Cargo(models.Model):
+class Cargos(models.Model):
     nome_do_cargo = models.CharField(max_length=255)
     vagas_autorizadas = models.IntegerField(default=0)
     vagas_ocupadas = models.IntegerField(default=0)

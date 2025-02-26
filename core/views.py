@@ -1,7 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from .models import Cargo, Orgao
+from .models import Cargos, Orgao
 from .serializers import CargoSerializer, OrgaoSerializer
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
@@ -13,7 +13,7 @@ class CargoView(APIView):
         responses={200: CargoSerializer(many=True)},
     )
     def get(self, request):
-        cargos = Cargo.objects.all()
+        cargos = Cargos.objects.all()
         return Response(CargoSerializer(cargos, many=True).data, status=status.HTTP_200_OK)
 
 class OrgaoView(APIView):
