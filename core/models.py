@@ -9,7 +9,7 @@ class Cargos(models.Model):
     vagas_autorizadas = models.IntegerField(default=0)
     vagas_ocupadas = models.IntegerField(default=0)
     cbo = models.CharField(max_length=10)
-    quadro_cargos = models.IntegerField(default=1)  # Apenas armazenando o ID, sem FK
+    quadro_cargos = models.IntegerField(default=0) 
 
 class Orgao(models.Model):
     nome_exibicao = models.CharField(max_length=255)
