@@ -85,8 +85,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'tcmpa_new_db',
-        'USER': 'postgres',
-        'PASSWORD': 'postgres',
+        'USER': 'luiz',
+        'PASSWORD': 'luiz',
         'HOST': 'localhost',
         'PORT': '5432',
     }
