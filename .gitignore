@@ -5,7 +5,6 @@ venv/
 
 # Bytecode do Python
 __pycache__/
-*.py[cod]
 *$py.class
 
 # Arquivos do Django
@@ -24,25 +23,6 @@ staticfiles/
 # IDEs e editores
 .vscode/
 .idea/
-*.sublime-workspace
-*.sublime-project
-
-# Testes
-.coverage
-htmlcov/
-.tox/
-nosetests.xml
-coverage.xml
-*.cover
-*.py,cover
-
-# Docker
-*.pid
-*.sock
-
-# Node (se estiver usando npm ou yarn para front)
-node_modules/
 
 # Arquivos do sistema
 .DS_Store
-Thumbs.db
